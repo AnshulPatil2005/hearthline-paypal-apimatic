@@ -1,0 +1,23 @@
+[project]
+name = "hearthline-paypal-apimatic"
+version = "0.1.0"
+description = "PayPal Transaction Search through APIMatic's generated PayPal Python SDK, built with APIMatic's PayPal Context Plugin (an excerpt from Hearthline)"
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = [
+    "paypal @ git+https://github.com/context-plugins/paypal-python-sdk.git@143e57f2a3729d7df3727386b8c9ddf023d9a5df",
+]
+
+[dependency-groups]
+dev = ["pytest>=8", "mypy>=1.13", "ruff>=0.8"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
