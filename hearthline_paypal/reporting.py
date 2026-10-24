@@ -59,6 +59,7 @@ class Transaction:
     at: datetime | None
     reference_id: str | None  # the related transaction (a refund points at the original payment)
     custom: str | None  # for payouts, the application's own sender_item_id
+    currency: str = "USD"  # a payment in another currency stays in it here; PayPal then reports a conversion
 
 
 def _value[T](field: T | UnsetType) -> T | None:
@@ -68,6 +69,11 @@ def _value[T](field: T | UnsetType) -> T | None:
 def _money(field: Money | UnsetType) -> Decimal:
     money = _value(field)
     return Decimal(money.value) if money is not None else Decimal(0)
+
+
+def _currency(field: Money | UnsetType) -> str:
+    money = _value(field)
+    return (money.currency_code if money is not None else None) or "USD"
 
 
 def _time(text: str | UnsetType) -> datetime | None:
@@ -167,6 +173,7 @@ def _transaction(info: TransactionInformation) -> Transaction | None:
         at=_time(info.transaction_initiation_date),
         reference_id=_value(info.paypal_reference_id),
         custom=_value(info.custom_field),
+        currency=_currency(info.transaction_amount),
     )
 
 
